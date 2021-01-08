@@ -3,7 +3,7 @@ import json
 import urllib.parse
 import urllib.request
 
-GUMLET_PROCESS_VIDEO_BASE_URL = "https://api.gumlet.com/v1/video/process"
+GUMLET_PROCESS_VIDEO_BASE_URL = "https://api.gumlet.com/v1/video/assets"
 
 def gumlet_create_asset_post(event, source_id, options=None):
     """

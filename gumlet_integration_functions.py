@@ -5,7 +5,7 @@ import urllib.request
 
 GUMLET_PROCESS_VIDEO_BASE_URL = "https://api.gumlet.com/v1/video/assets"
 
-def gumlet_create_asset_post(event, source_id, options=None):
+def gumlet_create_asset_post(event, collection_id, options=None):
     """
     This function ingests video asset for processing on create object event in S3 bucket
     when invoked withing lambda function.
@@ -14,8 +14,8 @@ def gumlet_create_asset_post(event, source_id, options=None):
     
     :param event: dict
         event object received from lambda function handler
-    :param source_id: str
-        Gumlet Video soure id.
+    :param collection_id: str
+        Gumlet Video collection id.
     :param options: dict
         body options for Create Asset Post request
     
@@ -36,12 +36,12 @@ def gumlet_create_asset_post(event, source_id, options=None):
         if not options:
             options = {
                 "input": urllib.parse.unquote_plus(event['Records'][0]['s3']['object']['key'], encoding='utf-8'),
-                "source_id": source_id,
+                "collection_id": collection_id,
                 "format": "HLS"
             }
         else:
             options["input"] = urllib.parse.unquote_plus(event['Records'][0]['s3']['object']['key'], encoding='utf-8')
-            options["source_id"] = source_id
+            options["collection_id"] = collection_id
 
         headers = {
             "authorization": "Bearer {}".format(os.environ['GUMLET_API_KEY']),

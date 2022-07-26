@@ -5,13 +5,13 @@ This repository contains utility functions for AWS Lambda function integration w
 
 1. Create a lambda function (or use the existing one) to be triggered on various events in a perticular S3 bucket.
 
-2. Generate an API key from [Gumlet Account Dashboard](https://www.gumlet.com/user/api_key) and set it as environment variable `GUMLET_API_KEY` in the lambda function. Find the reference [here](https://docs.aws.amazon.com/lambda/latest/dg/configuration-envvars.html).
+2. Generate an API key from [Gumlet Account Dashboard](https://www.gumlet.com/dashboard/organization/apikey/) and set it as environment variable `GUMLET_API_KEY` in the lambda function. Find the reference [here](https://docs.aws.amazon.com/lambda/latest/dg/configuration-envvars.html).
 
 3. Crate python script named `gumlet_integration_functions.py` in the lambda function and copy contents from `gumlet_integration_functions.py` in this repository to newly created file in the lambda function.
 
 4. Import the Gumlet integration script (`gumlet_integration_functions.py`) in your lambda function python script containing the `lambda_handler` function (named `lambda_function.py` by default). 
 
-5. Call `gumlet_create_asset_post` method from `gumlet_integration_functions` in your `lambda_handler` function with three parameters named `event`, `source_id`, and `options`. `event` parameter takes event object received from `lambda_handler` directly, pass your Gumlet video source id in `source_id` parameter. And pass video processing parameters to `option` parameterm, find comeplete reference [here](https://docs.gumlet.com/developers/video-apis#body-parameters).
+5. Call `gumlet_create_asset_post` method from `gumlet_integration_functions` in your `lambda_handler` function with three parameters named `event`, `collection_id`, and `options`. `event` parameter takes event object received from `lambda_handler` directly, pass your Gumlet video collection id in `collection_id` parameter. And pass video processing parameters to `option` parameterm, find comeplete reference [here](https://docs.gumlet.com/reference/create-asset).
 
 6. This function will return three values namely `status`, `message`, and `response`. `status` will be `False` in case of any error. `message` will contain an error message if any. And `response` will contain a response object from Gumlet on successfully creating a video asset.
 
@@ -36,8 +36,8 @@ def lambda_handler(event, context):
     key = urllib.parse.unquote_plus(event['Records'][0]['s3']['object']['key'], encoding='utf-8')
     try:
         
-        # Gumlet video source id
-        gumlet_source_id = "5fc7765de648a029e1e62edf"
+        # Gumlet video collection id
+        gumlet_collection_id = "5fc7765de648a029e1e62edf"
         
         # Video Asset Options
         options = {
@@ -56,7 +56,7 @@ def lambda_handler(event, context):
         # Gumlet integration function call
         status, message, response = gumlet_integration_functions.gumlet_create_asset_post(
             event, 
-            gumlet_source_id,
+            gumlet_collection_id,
             options
         )
 
